@@ -1,5 +1,5 @@
 const fs = require('fs');
-const PngToBoxShadow = require('./index.js');
+const { PngToBoxShadow, mergeCells } = require('./index.js');
 
 const fileName = 'resources/colors.png';
 const width = 500;
