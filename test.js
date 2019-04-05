@@ -1,7 +1,7 @@
-const fs = require("fs");
-const PngToBoxShadow = require("./index.js");
+const fs = require('fs');
+const PngToBoxShadow = require('./index.js');
 
-const fileName = "resources/colors.png";
+const fileName = 'resources/colors.png';
 const width = 500;
 const ratio = 1;
 
@@ -16,5 +16,5 @@ PngToBoxShadow({ fileName, width, ratio }, (err, boxShadow) => {
     }
 `;
 
-    fs.writeFile("main.css", output, "utf8", () => { });
+    fs.writeFile('main.css', output, 'utf8', () => {});
 });

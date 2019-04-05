@@ -1,4 +1,4 @@
-const PNG = require("png-js");
+const PNG = require('png-js');
 
 const decToHex = dec => {
     const hex = dec.toString(16);
@@ -25,7 +25,7 @@ const getRows = (data, options) => {
             );
         }
 
-        rows.push(cells.join(", "));
+        rows.push(cells.join(', '));
     }
 
     return rows;
@@ -36,7 +36,7 @@ const PngToBoxShadow = (options = {}, callback) => {
         PNG.decode(options.fileName, data => {
             try {
                 const rows = getRows(data, options);
-                const output = rows.join(",\n");
+                const output = rows.join(',\n');
 
                 callback(null, output);
             } catch (e) {
