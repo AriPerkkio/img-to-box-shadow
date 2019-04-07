@@ -2,10 +2,10 @@
     "name": "temp",
     "version": "1.0.0",
     "description": "",
-    "main": "index.js",
+    "main": "src/index.js",
     "scripts": {
-        "start": "nodemon test.js",
-        "start:server": "live-server",
+        "start": "nodemon src/__tests__/index.test.js",
+        "start:server": "live-server resources/",
         "test": "echo \"Error: no test specified\" && exit 1"
     },
     "author": "",

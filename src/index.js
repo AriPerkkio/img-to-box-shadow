@@ -1,32 +1,7 @@
 const PNG = require('png-js');
+const { mergeHorizontal } = require('./merge');
 
 const cellToShadow = ({ x, y, rgba }) => `${x}px ${y}px 0 ${rgba}`;
-
-const mergeHorizontal = cells => {
-    const mergedCells = [];
-    const lastIndex = cells.length - 1;
-
-    for (let y = 0; y < cells.length; y++) {
-        const left = cells[y];
-        const color = left.rgba;
-        const isLast = y === lastIndex;
-
-        if (isLast || color !== cells[y + 1].rgba) {
-            mergedCells.push(left);
-            continue;
-        }
-
-        let x = 0 + left.x;
-        while (y < lastIndex && color === cells[y + 1].rgba) {
-            y++;
-            x++;
-        }
-
-        mergedCells.push({ ...left, x });
-    }
-
-    return mergedCells;
-};
 
 const getRows = (data, options) => {
     const { width, ratio } = options;
@@ -69,7 +44,4 @@ const PngToBoxShadow = (options = {}, callback) =>
         }
     });
 
-module.exports = {
-    PngToBoxShadow,
-    mergeHorizontal,
-};
+module.exports = PngToBoxShadow;
