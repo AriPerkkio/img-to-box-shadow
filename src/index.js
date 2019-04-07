@@ -36,7 +36,7 @@ const PngToBoxShadow = (options = {}, callback) =>
     PNG.decode(options.fileName, data => {
         try {
             const rows = getRows(data, options);
-            const output = rows.join(',\n');
+            const output = rows.join(',');
 
             callback(null, output);
         } catch (e) {
