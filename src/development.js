@@ -1,11 +1,13 @@
 const fs = require('fs');
 const PngToBoxShadow = require('./index.js');
 
+const target = 'resources/main.css';
 const fileName = 'resources/colors.png';
 const width = 500;
 const ratio = 1;
+const compress = true;
 
-PngToBoxShadow({ fileName, width, ratio }, (err, boxShadow) => {
+PngToBoxShadow({ fileName, width, ratio, compress }, (err, boxShadow) => {
     if (err) throw err;
 
     const output = `    #box-shadow-tester {
@@ -16,5 +18,5 @@ PngToBoxShadow({ fileName, width, ratio }, (err, boxShadow) => {
     }
 `;
 
-    fs.writeFile('resources/main.css', output, 'utf8', () => {});
+    fs.writeFile(target, output, 'utf8', () => {});
 });

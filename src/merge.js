@@ -31,17 +31,20 @@ const mergeVertical = rows => {
     for (let x = 0; x < maxRowLength; x++) {
         for (let y = 0; y < rows.length; y++) {
             const upper = rows[y][x];
+
+            if (!upper) continue;
+
             const color = upper.rgba;
             const isLast = y === lastIndex;
             const initialY = 0 + y;
 
-            if (isLast || color != rows[y + 1][x].rgba) {
+            if (isLast || color != (rows[y + 1][x] || {}).rgba) {
                 mergedRows[y][x] = { ...upper };
                 continue;
             }
 
             let upperY = 0 + upper.y;
-            while (y < lastIndex && color === rows[y + 1][x].rgba) {
+            while (y < lastIndex && color === (rows[y + 1][x] || {}).rgba) {
                 mergedRows[y][x] = null;
                 y++, upperY++;
             }

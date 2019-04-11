@@ -1,10 +1,16 @@
 const PNG = require('png-js');
-const { mergeHorizontal } = require('./merge');
+const { mergeHorizontal, mergeVertical } = require('./merge');
 
 const cellToShadow = ({ x, y, rgba }) => `${x}px ${y}px 0 ${rgba}`;
+const isDefined = val => val;
+const formatCell = cell =>
+    cell
+        .filter(isDefined)
+        .map(cellToShadow)
+        .join(',\n');
 
 const getRows = (data, options) => {
-    const { width, ratio } = options;
+    const { width, ratio, compress } = options;
     const rows = [];
     const rowSliceLength = width * 4;
 
@@ -22,14 +28,12 @@ const getRows = (data, options) => {
             });
         }
 
-        const mergedCells = mergeHorizontal(cells);
-        // TODO merge vertically
-        // TODO threshold for merging pixels
-
-        rows.push(mergedCells.map(cellToShadow).join(',\n'));
+        rows.push(compress ? mergeHorizontal(cells) : cells);
     }
 
-    return rows;
+    return (compress ? mergeVertical(rows) : rows)
+        .map(formatCell)
+        .filter(isDefined);
 };
 
 const PngToBoxShadow = (options = {}, callback) =>
