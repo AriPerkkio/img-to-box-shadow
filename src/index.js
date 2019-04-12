@@ -1,14 +1,7 @@
 const fs = require('fs');
 const PNG = require('pngjs').PNG;
-const { mergeHorizontal, mergeVertical } = require('./merge');
 
 const cellToShadow = ({ x, y, rgba }) => `${x}px ${y}px 0 ${rgba}`;
-const isDefined = val => val;
-const formatCell = cell =>
-    cell
-        .filter(isDefined)
-        .map(cellToShadow)
-        .join(',\n');
 
 const getRows = (data, options) => {
     const { width, ratio, compress } = options;
@@ -29,22 +22,22 @@ const getRows = (data, options) => {
             });
         }
 
-        rows.push(compress ? mergeHorizontal(cells) : cells);
+        // TODO options.useCssVariables:
+        // - Reduce size of output by mapping box-shadow values to css variables
+        rows.push(cells.map(cellToShadow).join(','));
     }
 
-    return (compress ? mergeVertical(rows) : rows)
-        .map(formatCell)
-        .filter(isDefined);
+    return rows;
 };
 
 const PngToBoxShadow = (options = {}, callback) =>
     fs
         .createReadStream(options.fileName)
-        .pipe(new PNG({ filterType: 4 }))
+        .pipe(new PNG())
         .on('parsed', function() {
             try {
                 const rows = getRows(this.data, options);
-                const output = rows.join(',\n');
+                const output = rows.join(',');
 
                 callback(null, output);
             } catch (e) {
