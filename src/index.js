@@ -1,4 +1,5 @@
-const PNG = require('png-js');
+const fs = require('fs');
+const PNG = require('pngjs').PNG;
 const { mergeHorizontal, mergeVertical } = require('./merge');
 
 const cellToShadow = ({ x, y, rgba }) => `${x}px ${y}px 0 ${rgba}`;
@@ -37,15 +38,18 @@ const getRows = (data, options) => {
 };
 
 const PngToBoxShadow = (options = {}, callback) =>
-    PNG.decode(options.fileName, data => {
-        try {
-            const rows = getRows(data, options);
-            const output = rows.join(',');
+    fs
+        .createReadStream(options.fileName)
+        .pipe(new PNG({ filterType: 4 }))
+        .on('parsed', function() {
+            try {
+                const rows = getRows(this.data, options);
+                const output = rows.join(',\n');
 
-            callback(null, output);
-        } catch (e) {
-            callback(e);
-        }
-    });
+                callback(null, output);
+            } catch (e) {
+                callback(e);
+            }
+        });
 
 module.exports = PngToBoxShadow;
