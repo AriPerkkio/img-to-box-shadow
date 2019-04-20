@@ -1,33 +1,44 @@
 const fs = require('fs');
 const PNG = require('pngjs').PNG;
+const transformCssVariables = require('./transformCssVariables');
 
-const cellToShadow = ({ x, y, rgba }) => `${x}px ${y}px 0 ${rgba}`;
+const toPx = val => (val === 0 ? 0 : `${val}px`);
+const cellToShadow = ({ x, y, rgba }) => `${toPx(x)} ${toPx(y)} 0 ${rgba}`;
+const rowsToShadow = rows =>
+    rows
+        .reduce((all, row) => [...all, row.map(cellToShadow).join(',')], [])
+        .join();
 
 const getRows = (data, options) => {
-    const { width, ratio, compress } = options;
+    const { width, ratio, useCssVariables } = options;
     const rows = [];
     const rowSliceLength = width * 4;
 
     for (let i = 0; i < data.length; i += rowSliceLength) {
-        const row = data.slice(i, i + rowSliceLength);
-        const cells = [];
+        const pixelRow = data.slice(i, i + rowSliceLength);
+        const row = [];
 
-        for (let x = 0; x < row.length - 4; x += 4) {
-            const [r, g, b, a] = row.slice(x, x + 4);
+        for (let x = 0; x < pixelRow.length - 4; x += 4) {
+            const [r, g, b, a] = pixelRow.slice(x, x + 4);
 
-            cells.push({
+            row.push({
                 x: (x / 4) * ratio,
                 y: rows.length * ratio,
                 rgba: `rgba(${r},${g},${b},${a})`,
             });
         }
 
-        // TODO options.useCssVariables:
-        // - Reduce size of output by mapping box-shadow values to css variables
-        rows.push(cells.map(cellToShadow).join(','));
+        rows.push(row);
     }
 
-    return rows;
+    if (options.useCssVariables) {
+        const { cssVariables, transformedRows } = transformCssVariables(rows);
+        const boxShadow = rowsToShadow(transformedRows);
+
+        return { boxShadow, cssVariables };
+    } else {
+        return { boxShadow: rowsToShadow(rows) };
+    }
 };
 
 const PngToBoxShadow = (options = {}, callback) =>
@@ -36,10 +47,9 @@ const PngToBoxShadow = (options = {}, callback) =>
         .pipe(new PNG())
         .on('parsed', function() {
             try {
-                const rows = getRows(this.data, options);
-                const output = rows.join(',');
+                const { boxShadow, cssVariables } = getRows(this.data, options);
 
-                callback(null, output);
+                callback(null, { boxShadow, cssVariables });
             } catch (e) {
                 callback(e);
             }
