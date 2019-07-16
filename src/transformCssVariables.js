@@ -1,11 +1,8 @@
 const increaseChar = char => String.fromCharCode(char.charCodeAt(0) + 1);
 const increaseIndex = index => (index ? 1 + parseInt(index) : 0);
-const parseCssVariable = cssVariable => cssVariable.match(/--(.*)/).pop();
 
-const getNextVariableName = cssVariables => {
-    const keys = Object.values(cssVariables);
-    const lastKey = keys[keys.length - 1] || '--`';
-    const lastName = parseCssVariable(lastKey);
+const getNextVariableName = lastKey => {
+    const lastName = (lastKey || '--`').substr(2);
     const char = lastName.charAt(0);
     const index = lastName.substr(1);
 
@@ -27,10 +24,14 @@ const transform = rows => {
 
     // Construct CSS variables for RGBAs
     const rgbaToCssVar = {};
+    const generatedCssVars = [];
     Object.keys(rgbaCounts)
         .filter(rgba => rgbaCounts[rgba] > 1)
-        .forEach(rgba => {
-            rgbaToCssVar[rgba] = `--${getNextVariableName(rgbaToCssVar)}`;
+        .forEach((rgba, i, all) => {
+            const prevCssVar = generatedCssVars[generatedCssVars.length - 1];
+            const cssVar = `--${getNextVariableName(prevCssVar)}`;
+            rgbaToCssVar[rgba] = cssVar;
+            generatedCssVars.push(cssVar);
         });
 
     // Construct rows with CSS variables and original RGBAs
@@ -45,7 +46,7 @@ const transform = rows => {
 
     // Convert RGBA to CSS map to valid CSS variables
     const cssVariables = Object.keys(rgbaToCssVar)
-        .map(rgba => `${rgbaToCssVar[rgba]}: ${rgba};`)
+        .map(rgba => `${rgbaToCssVar[rgba]}:${rgba};`)
         .join('');
 
     return { cssVariables, transformedRows };
