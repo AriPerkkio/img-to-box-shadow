@@ -7,7 +7,7 @@ const width = 594;
 const ratio = 1;
 const useCssVariables = true;
 
-const cssTemplate = (boxShadow, cssVariables = '') =>
+const cssTemplate = (boxShadow: string, cssVariables: string = '') =>
     `
 :root {
     ${cssVariables}
@@ -20,13 +20,13 @@ const cssTemplate = (boxShadow, cssVariables = '') =>
 }
 `;
 
-PngToBoxShadow({ fileName, width, ratio, useCssVariables }, (err, result) => {
+PngToBoxShadow(({ fileName, width, ratio, useCssVariables }), (err: any, result: any) => {
     if (err) throw err;
 
     const { boxShadow, cssVariables } = result;
     const output = cssTemplate(boxShadow, cssVariables);
 
-    fs.writeFile(target, output, 'utf8', err =>
+    fs.writeFile(target, output, 'utf8', (err: any) =>
         err
             ? console.log(`Failed to write file, ${err.toString()}`)
             : console.log(
@@ -35,3 +35,5 @@ PngToBoxShadow({ fileName, width, ratio, useCssVariables }, (err, result) => {
               )
     );
 });
+
+export {};
