@@ -1,16 +1,16 @@
-import { BoxShadow, Options, RawPng } from './types/PngToBoxShadow';
-
 import fs from 'fs';
-import {PNG} from 'pngjs';
-import transformCssVariables from './transformCssVariables');
+import { PNG } from 'pngjs';
 
-const toPx = (val: number) => (val === 0 ? 0 : `${val}px`);
-const cellToShadow = (cell: BoxShadow) =>
+import transformCssVariables from './transformCssVariables';
+
+const toPx = (val: number): string | number => (val === 0 ? 0 : `${val}px`);
+const cellToShadow = (cell: BoxShadow): string =>
     `${toPx(cell.x)} ${toPx(cell.y)} 0 ${cell.rgba}`;
-const rowsToShadow = (rows: any) =>
+
+const rowsToShadow = (rows: BoxShadow[][]): string =>
     rows
         .reduce(
-            (all: any[string], row: any) => [
+            (all: string[], row: BoxShadow[]): string[] => [
                 ...all,
                 row.map(cellToShadow).join(','),
             ],
@@ -18,17 +18,18 @@ const rowsToShadow = (rows: any) =>
         )
         .join();
 
-const getRows = (data: RawPng[], options: Options) => {
+const getRows = (data: number[], options: Options): Result => {
     const { width, ratio, useCssVariables } = options;
-    const rows: any[any] = [];
-    const rowSliceLength = width * 4;
+    const rows: BoxShadow[][] = [];
+    const rowSliceLength: number = width * 4;
 
     for (let i = 0; i < data.length; i += rowSliceLength) {
-        const pixelRow = data.slice(i, i + rowSliceLength);
+        const pixelRow: number[] = data.slice(i, i + rowSliceLength);
         const row: BoxShadow[] = [];
 
         for (let x = 0; x < pixelRow.length - 4; x += 4) {
-            const [r, g, b, a] = pixelRow.slice(x, x + 4);
+            const pixel: number[] = pixelRow.slice(x, x + 4);
+            const [r, g, b, a] = pixel;
 
             row.push({
                 x: (x / 4) * ratio,
@@ -52,11 +53,8 @@ const getRows = (data: RawPng[], options: Options) => {
 
 const PngToBoxShadow = (
     options: Options,
-    callback: (
-        a: Error,
-        b?: { boxShadow: string; cssVariables: string }
-    ) => void
-): void =>
+    callback: (a: Error, b?: Result) => void
+): PNG =>
     fs
         .createReadStream(options.fileName)
         .pipe(new PNG())
@@ -70,4 +68,4 @@ const PngToBoxShadow = (
             }
         });
 
-module.exports = PngToBoxShadow;
+export default PngToBoxShadow;

@@ -1,32 +1,34 @@
-const fs = require('fs');
-const PngToBoxShadow = require('./index.js');
+import fs from 'fs';
+import PngToBoxShadow from './index.js';
 
+const options: Options = {
+    fileName: 'resources/mnist.png',
+    width: 594,
+    ratio: 1,
+    useCssVariables: true,
+};
 const target = 'resources/main.css';
-const fileName = 'resources/mnist.png';
-const width = 594;
-const ratio = 1;
-const useCssVariables = true;
 
-const cssTemplate = (boxShadow: string, cssVariables: string = '') =>
+const cssTemplate = (boxShadow: string, cssVariables: string = ''): string =>
     `
 :root {
     ${cssVariables}
 }
 #box-shadow-tester {
-    height: ${ratio}px;
-    width: ${ratio}px;
+    height: ${options.ratio}px;
+    width: ${options.ratio}px;
     box-shadow:
         ${boxShadow};
 }
 `;
 
-PngToBoxShadow(({ fileName, width, ratio, useCssVariables }), (err: any, result: any) => {
+PngToBoxShadow(options, (err: Error, result: Result): void => {
     if (err) throw err;
 
     const { boxShadow, cssVariables } = result;
     const output = cssTemplate(boxShadow, cssVariables);
 
-    fs.writeFile(target, output, 'utf8', (err: any) =>
+    fs.writeFile(target, output, 'utf8', (err: Error): void =>
         err
             ? console.log(`Failed to write file, ${err.toString()}`)
             : console.log(
@@ -35,5 +37,3 @@ PngToBoxShadow(({ fileName, width, ratio, useCssVariables }), (err: any, result:
               )
     );
 });
-
-export {};
