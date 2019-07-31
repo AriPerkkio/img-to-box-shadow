@@ -2,6 +2,7 @@ import fs from 'fs';
 import { PNG } from 'pngjs';
 
 import transformCssVariables from './transformCssVariables';
+import { resolveColor } from './colorResolver';
 
 const toPx = (val: number): string | number => (val === 0 ? 0 : `${val}px`);
 const cellToShadow = (cell: BoxShadow): string =>
@@ -29,12 +30,11 @@ const getRows = (data: number[], options: Options): Result => {
 
         for (let x = 0; x < pixelRow.length - 4; x += 4) {
             const pixel: number[] = pixelRow.slice(x, x + 4);
-            const [r, g, b, a] = pixel;
 
             row.push({
                 x: (x / 4) * ratio,
                 y: rows.length * ratio,
-                rgba: `rgba(${r},${g},${b},${a})`,
+                rgba: resolveColor(pixel),
             });
         }
 

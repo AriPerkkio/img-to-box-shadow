@@ -1,10 +1,10 @@
 ```js
-const fileName = 'resources/colors.png';
-const width = 500;
+fileName: 'resources/colors.png',
+width: 500,
 
-const fileName = 'resources/mnist.png';
-const width = 594;
+fileName: 'resources/mnist.png',
+width: 594,
 
-const fileName = 'resources/mnist_min.png';
-const width = 15;
+fileName: 'resources/mnist_min.png',
+width: 15,
 ```

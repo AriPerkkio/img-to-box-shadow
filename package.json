@@ -2,10 +2,11 @@
     "name": "temp",
     "version": "1.0.0",
     "description": "",
-    "main": "src/index.js",
+    "main": "dist/index.js",
     "scripts": {
         "build": "tsc",
-        "start": "nodemon src/development.js",
+        "build:watch": "tsc -w",
+        "start": "nodemon dist/development.js",
         "start:server": "live-server resources/",
         "test": "jest --verbose",
         "test:watch": "jest --verbose --watch"

@@ -2,8 +2,8 @@ import fs from 'fs';
 import PngToBoxShadow from './index.js';
 
 const options: Options = {
-    fileName: 'resources/mnist.png',
-    width: 594,
+    fileName: 'resources/colors.png',
+    width: 500,
     ratio: 1,
     useCssVariables: true,
 };
