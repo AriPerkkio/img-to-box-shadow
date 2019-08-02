@@ -1,39 +1,44 @@
 Convert images (.png) to box shadow
 
 ## Usage
-```js
-const fs = require('fs');
-const PngToBoxShadow = require('./index.js');
+```ts
+import fs from 'fs';
+import PngToBoxShadow from './index.js';
 
+const options: Options = {
+    fileName: 'resources/colors.png',
+    width: 500,
+    ratio: 1,
+    useCssVariables: true,
+};
 const target = 'resources/main.css';
-const fileName = 'resources/mnist.png';
-const width = 594;
-const ratio = 1;
-const useCssVariables = true;
 
-const cssTemplate = (boxShadow, cssVariables = '') =>
+const cssTemplate = (boxShadow: string, cssVariables: string = ''): string =>
     `
 :root {
     ${cssVariables}
 }
 #box-shadow-tester {
-    height: ${ratio}px;
-    width: ${ratio}px;
+    height: ${options.ratio}px;
+    width: ${options.ratio}px;
     box-shadow:
         ${boxShadow};
 }
 `;
 
-PngToBoxShadow({ fileName, width, ratio, useCssVariables }, (err, result) => {
+PngToBoxShadow(options, (err: Error, result: Result): void => {
     if (err) throw err;
 
     const { boxShadow, cssVariables } = result;
     const output = cssTemplate(boxShadow, cssVariables);
 
-    fs.writeFile(target, output, 'utf8', err =>
+    fs.writeFile(target, output, 'utf8', (err: Error): void =>
         err
             ? console.log(`Failed to write file, ${err.toString()}`)
-            : console.log(`Completed, output size ${output.length}`)
+            : console.log(
+                  `Completed, box shadow size ${boxShadow.length} `,
+                  `css variables size ${(cssVariables || '').length}`
+              )
     );
 });
 ```
