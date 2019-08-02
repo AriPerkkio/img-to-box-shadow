@@ -3,7 +3,7 @@ Convert images (.png) to box shadow
 ## Usage
 ```ts
 import fs from 'fs';
-import PngToBoxShadow from './index.js';
+import PngToBoxShadow from 'img-to-box-shadow';
 
 const options: Options = {
     fileName: 'resources/colors.png',

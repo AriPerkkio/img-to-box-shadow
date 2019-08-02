@@ -1,8 +1,9 @@
 {
-    "name": "temp",
+    "name": "img-to-box-shadow",
     "version": "1.0.0",
     "description": "",
     "main": "dist/index.js",
+    "files": ["dist/*.js", "src/*.ts"],
     "scripts": {
         "build": "tsc",
         "build:watch": "tsc -w",
