@@ -1,4 +1,4 @@
-const transformCssVariables = require('../transformCssVariables');
+import transformCssVariables from '../transformCssVariables';
 
 const red = 'rgba(255,0,0,0)';
 const green = 'rgba(0,255,0,0)';
@@ -27,9 +27,9 @@ const rows = [
     ],
 ];
 
-describe('transformCssVariables', () => {
-    it("should transform rows' RGBAs to CSS variables", () => {
-        const { cssVariables, transformedRows } = transformCssVariables(rows);
+describe('transformCssVariables', (): void => {
+    it("should transform rows' RGBAs to CSS variables", (): void => {
+        const { transformedRows } = transformCssVariables(rows);
 
         expect(transformedRows).toEqual([
             [
@@ -53,8 +53,8 @@ describe('transformCssVariables', () => {
         ]);
     });
 
-    it("should construct CSS variables of given rows' RGBAs", () => {
-        const { cssVariables, transformedRows } = transformCssVariables(rows);
+    it("should construct CSS variables of given rows' RGBAs", (): void => {
+        const { cssVariables } = transformCssVariables(rows);
 
         expect(cssVariables.replace(/\s/g, '')).toMatch(
             `--a: ${red};
