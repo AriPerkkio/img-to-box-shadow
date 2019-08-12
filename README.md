@@ -1,5 +1,9 @@
 Convert images (.png) to box shadow
 
+### Examples
+- [Codepen, 1MB CSS](https://codepen.io/ariperkkio/pen/YMzxzO)
+- [GithubPages, 7.3MB CSS](https://ariperkkio.github.io/img-to-box-shadow/). Opens and renders slowly on any browser. Opening developer tools may freeze browser.
+
 ## Usage
 ```ts
 import fs from 'fs';
